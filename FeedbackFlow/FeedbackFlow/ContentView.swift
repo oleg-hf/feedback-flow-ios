@@ -50,7 +50,7 @@ private extension ContentView {
 
             TextEditor(text: $viewModel.questionText)
                 .padding(8)
-                .frame(height: 80)
+                .frame(height: 180)
                 .font(.system(size: 16, weight: .regular))
                 .background(Color.white)
                 .overlay(
@@ -67,6 +67,19 @@ private extension ContentView {
             .foregroundColor(.white)
             .font(.system(size: 16, weight: .semibold))
             .cornerRadius(8)
+
+            if viewModel.isLoading {
+                ProgressView()
+                    .padding(.top, 16)
+            }
+
+            if !viewModel.responseText.isEmpty {
+                Text(viewModel.responseText)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+            }
 
             Spacer()
         }

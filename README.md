@@ -1,1 +1,3 @@
-# feedback-flow-ios
+# FeedbackFlow
+
+_FeedbackFlow_ is an innovative AI-powered application designed to revolutionize how we process and understand user feedback. By leveraging advanced language models, this project analyzes messages from the #hf-work-feedback-prod Slack channel, exported as a CSV file, to deliver actionable insights. Hosted on AWS, the solution uses Amazon S3 for data storage, AWS Lambda to interact with Amazon Q Business for AI processing, and .NET API services to bridge mobile clients to Lambda functions. Users can interact with the AI bot in plain English via a mobile app, receiving plain-text responses initially, with potential future enhancements like image-based outputs.

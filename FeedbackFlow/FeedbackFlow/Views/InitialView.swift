@@ -12,6 +12,7 @@ struct InitialView: View {
     @ObservedObject var viewModel: ContentViewModel
     let items: [ResultItem]
     @Binding var isExpanded: Bool
+    var onClear: () -> Void
 
     var body: some View {
         VStack(spacing: 24) {
@@ -42,15 +43,16 @@ struct InitialView: View {
                     .cornerRadius(8)
             }
 
-            if !items.isEmpty {
-                HistoryView(
-                    items: items,
-                    isExpanded: $isExpanded,
-                    onTap: { item in
-                        viewModel.showResult(from: item)
-                    }
-                )
-            }
+            HistoryView(
+                items: items,
+                isExpanded: $isExpanded,
+                onTap: { item in
+                    viewModel.showResult(from: item)
+                },
+                onClear: {
+                    onClear()
+                }
+            )
 
             Spacer()
         }

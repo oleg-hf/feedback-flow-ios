@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
     @StateObject var viewModel: ContentViewModel
     @Query var items: [ResultItem]
     @State private var isExpanded = false
@@ -23,7 +24,8 @@ struct ContentView: View {
                         InitialView(
                             viewModel: viewModel,
                             items: items,
-                            isExpanded: $isExpanded
+                            isExpanded: $isExpanded,
+                            onClear: clearHistory
                         )
                         .padding(.horizontal, 16)
                     }
@@ -55,6 +57,18 @@ struct ContentView: View {
                     viewModel.resetForm()
                 }
             }
+        }
+    }
+
+    private func clearHistory() {
+        let descriptor = FetchDescriptor<ResultItem>()
+        do {
+            let allItems = try modelContext.fetch(descriptor)
+            for item in allItems {
+                modelContext.delete(item)
+            }
+        } catch {
+            print("Failed to clear history: \(error)")
         }
     }
 }

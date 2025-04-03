@@ -10,7 +10,9 @@ import SwiftUI
 class ContentViewModel: ObservableObject {
     @Published var questionText = ""
     @Published var responseText = ""
+    @Published var errorText = ""
     @Published var isLoading = false
+    @Published var shouldShowResults = false
 
     private let networkService = NetworkService()
 
@@ -24,13 +26,22 @@ class ContentViewModel: ObservableObject {
                 await MainActor.run {
                     self.responseText = result
                     self.isLoading = false
+                    self.shouldShowResults = true
                 }
             } catch {
                 await MainActor.run {
-                    self.responseText = "Error: \(error.localizedDescription)"
+                    self.errorText = "Error: \(error.localizedDescription)"
                     self.isLoading = false
+                    self.shouldShowResults = false
                 }
             }
         }
+    }
+    
+    func resetForm() {
+        questionText = ""
+        responseText = ""
+        errorText = ""
+        shouldShowResults = false
     }
 }

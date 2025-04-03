@@ -11,35 +11,31 @@ struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
 
     var body: some View {
-        VStack(spacing: 16) {
-            header
+        NavigationStack {
+            VStack(spacing: 16) {
+                HeaderView()
 
-            ScrollView {
-                initialView
+                ScrollView {
+                    initialView
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 32)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 32)
+            .background(Color.gray.opacity(0.1))
+            .navigationDestination(isPresented: $viewModel.shouldShowResults) {
+                ResultsView(
+                    question: viewModel.questionText,
+                    response: viewModel.responseText,
+                    onAskAnotherQuestion: {
+                        viewModel.resetForm()
+                    }
+                )
+            }
         }
-        .background(Color.gray.opacity(0.1))
     }
 }
 
 private extension ContentView {
-    @ViewBuilder
-    var header: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(.white)
-                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                .edgesIgnoringSafeArea(.top)
-
-            Text("FeedbackFlow")
-                .font(.system(size: 20, weight: .bold))
-                .padding(.top, 16)
-                .padding(.bottom, 16)
-        }
-        .frame(height: 40)
-    }
 
     @ViewBuilder
     var initialView: some View {
@@ -59,22 +55,16 @@ private extension ContentView {
                 )
                 .cornerRadius(12)
 
-            Button("Submit") {
-                viewModel.didTapSubmitButton()
-            }
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .font(.system(size: 16, weight: .semibold))
-            .cornerRadius(8)
-
+            SubmitButton(title: "Submit", action: viewModel.didTapSubmitButton)
+                .padding(.vertical, 20)
             if viewModel.isLoading {
                 ProgressView()
                     .padding(.top, 16)
             }
 
-            if !viewModel.responseText.isEmpty {
-                Text(viewModel.responseText)
+            if !viewModel.errorText.isEmpty {
+                Text(viewModel.errorText)
+                    .foregroundColor(.red)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(.systemGray6))

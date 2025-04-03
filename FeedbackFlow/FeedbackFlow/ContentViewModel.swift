@@ -11,9 +11,11 @@ import SwiftData
 class ContentViewModel: ObservableObject {
     @Published var questionText = ""
     @Published var responseText = ""
-    @Published var errorText = ""
     @Published var isLoading = false
     @Published var shouldShowResults = false
+    @Published var shouldShowError = false
+
+    private(set) var errorText = ""
 
     private let networkService = NetworkService()
     private let modelContext: ModelContext
@@ -23,6 +25,10 @@ class ContentViewModel: ObservableObject {
     }
     
     func didTapSubmitButton() {
+        guard !questionText.isEmpty else {
+            return
+        }
+
         isLoading = true
 
         Task {
@@ -41,6 +47,7 @@ class ContentViewModel: ObservableObject {
                     self.errorText = "Error: \(error.localizedDescription)"
                     self.isLoading = false
                     self.shouldShowResults = false
+                    self.shouldShowError = true
                 }
             }
         }

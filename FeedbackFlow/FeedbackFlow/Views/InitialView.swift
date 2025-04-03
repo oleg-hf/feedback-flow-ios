@@ -34,15 +34,6 @@ struct InitialView: View {
             SubmitButton(title: "Submit", action: viewModel.didTapSubmitButton)
                 .padding(.vertical, 20)
 
-            if !viewModel.errorText.isEmpty {
-                Text(viewModel.errorText)
-                    .foregroundColor(.red)
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-            }
-
             HistoryView(
                 items: items,
                 isExpanded: $isExpanded,
@@ -55,6 +46,11 @@ struct InitialView: View {
             )
 
             Spacer()
+        }
+        .alert("Error", isPresented: $viewModel.shouldShowError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorText)
         }
     }
 }

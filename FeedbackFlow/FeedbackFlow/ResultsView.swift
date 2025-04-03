@@ -13,21 +13,30 @@ struct ResultsView: View {
     var onAskAnotherQuestion: () -> Void
     
     var body: some View {
-        VStack(spacing: 16) {
-            HeaderView()
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    questionSection
-                    responseSection
-                    
-                    Spacer(minLength: 20)
-                    
-                    SubmitButton(title: "Ask Another Question", action: onAskAnotherQuestion)
-                        .padding(.vertical, 20)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                questionSection
+                responseSection
+                
+                Spacer(minLength: 20)
+                
+                SubmitButton(title: "Ask Another Question", action: onAskAnotherQuestion)
+                    .padding(.vertical, 20)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+        }
+        .navigationTitle("Results")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    onAskAnotherQuestion()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 32)
             }
         }
         .background(Color(.systemGroupedBackground))
@@ -55,10 +64,11 @@ private extension ResultsView {
                 .font(.headline)
                 .foregroundColor(.primary)
             
-            Text(LocalizedStringKey(processResponseText(response)))
+            Text(processResponseText(response))
                 .font(.body)
                 .foregroundColor(.primary)
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(nil)
+                .multilineTextAlignment(.leading)
         }
     }
     

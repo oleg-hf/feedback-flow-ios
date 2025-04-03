@@ -12,16 +12,14 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                HeaderView()
-
-                ScrollView {
-                    initialView
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 32)
+            ScrollView {
+                initialView
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
             }
             .background(Color.gray.opacity(0.1))
+            .navigationTitle("FeedbackFlow")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $viewModel.shouldShowResults) {
                 ResultsView(
                     question: viewModel.questionText,

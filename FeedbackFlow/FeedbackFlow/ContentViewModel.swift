@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 class ContentViewModel: ObservableObject {
     @Published var questionText = ""
@@ -15,7 +16,12 @@ class ContentViewModel: ObservableObject {
     @Published var shouldShowResults = false
 
     private let networkService = NetworkService()
+    private let modelContext: ModelContext
 
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+    
     func didTapSubmitButton() {
         isLoading = true
 
@@ -27,6 +33,8 @@ class ContentViewModel: ObservableObject {
                     self.responseText = result
                     self.isLoading = false
                     self.shouldShowResults = true
+                    let item = ResultItem(question: questionText, result: result)
+                    self.modelContext.insert(item)
                 }
             } catch {
                 await MainActor.run {
@@ -37,7 +45,13 @@ class ContentViewModel: ObservableObject {
             }
         }
     }
-    
+
+    func showResult(from item: ResultItem) {
+        questionText = item.question
+        responseText = item.result
+        shouldShowResults = true
+    }
+
     func resetForm() {
         questionText = ""
         responseText = ""
